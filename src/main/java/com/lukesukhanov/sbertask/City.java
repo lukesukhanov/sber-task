@@ -86,8 +86,9 @@ public final class City implements Serializable {
 		}
 
 		City that = (City) o;
-		return name.equals(that.name) && region.equals(that.region) && district.equals(that.district)
-				&& population == that.population && foundation.equals(that.foundation);
+		return Objects.equals(name, that.name) && Objects.equals(region, that.region) 
+				&& Objects.equals(district, that.district)
+				&& population == that.population && Objects.equals(foundation, that.foundation);
 	}
 
 	@Override
