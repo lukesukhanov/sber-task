@@ -1,5 +1,7 @@
 package com.lukesukhanov.sbertask;
 
+import static java.util.Comparator.comparing;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
@@ -26,6 +28,15 @@ public final class App {
 			e.printStackTrace();
 			return;
 		}
+
+		// First way of sort.
+		cities.sort(comparing((City city) -> city.getName().toLowerCase())
+				.reversed()); // В условии сказано "по убыванию", хотя в примере всё наоборот.
+
+		// Second way of sort.
+		cities.sort(comparing(City::getDistrict)
+				.thenComparing(comparing(City::getName))
+				.reversed());
 
 		PrintStream out = new PrintStream(System.out, true, DATA_FILE_CHARSET);
 		cities.forEach(out::println);
