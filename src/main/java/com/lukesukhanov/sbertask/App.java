@@ -1,16 +1,16 @@
 package com.lukesukhanov.sbertask;
 
-import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public final class App {
@@ -31,6 +31,8 @@ public final class App {
 			return;
 		}
 
+/////////////////////////////////////////////////////////////////////////////////
+
 		// First way of sorting.
 //		cities.sort(comparing((City city) -> city.getName().toLowerCase())
 //				.reversed()); // В условии сказано "по убыванию", хотя в примере всё наоборот.
@@ -42,27 +44,38 @@ public final class App {
 
 //		PrintStream out = new PrintStream(System.out, true, DATA_FILE_CHARSET);
 //		cities.forEach(out::println);
+
+/////////////////////////////////////////////////////////////////////////////////
 		
-		if (cities.isEmpty()) {
-			System.out.println("There is no cities to compare.");
-			return;
-		}
+//		if (cities.isEmpty()) {
+//			System.out.println("There is no cities to compare.");
+//			return;
+//		}
+//		
+//		City[] arrayOfCities = cities.toArray(City[]::new);
+//		int indOfMax = 0;
+//		int maxPopulation = arrayOfCities[0].getPopulation();
+//		for (int i = 0; i < arrayOfCities.length; i++) {
+//			if (arrayOfCities[i].getPopulation() > maxPopulation) {
+//				indOfMax = i;
+//				maxPopulation = arrayOfCities[i].getPopulation();
+//			}
+//		}
+//		
+//		DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+//		decimalFormatSymbols.setGroupingSeparator(' ');
+//		DecimalFormat decimalFormat = new DecimalFormat("#,###", decimalFormatSymbols);
+//		String formattedPopulation = decimalFormat.format(maxPopulation);
+//		
+//		System.out.format("[%d] = %s", indOfMax, formattedPopulation);
 		
-		City[] arrayOfCities = cities.toArray(City[]::new);
-		int indOfMax = 0;
-		int maxPopulation = arrayOfCities[0].getPopulation();
-		for (int i = 0; i < arrayOfCities.length; i++) {
-			if (arrayOfCities[i].getPopulation() > maxPopulation) {
-				indOfMax = i;
-				maxPopulation = arrayOfCities[i].getPopulation();
-			}
-		}
+/////////////////////////////////////////////////////////////////////////////////
 		
-		DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
-		decimalFormatSymbols.setGroupingSeparator(' ');
-		DecimalFormat decimalFormat = new DecimalFormat("#,###", decimalFormatSymbols);
-		String formattedPopulation = decimalFormat.format(maxPopulation);
+		Map<String, Long> regionToCitiesCount = cities.stream().collect(
+				groupingBy(City::getRegion, 
+						counting()));
 		
-		System.out.format("[%d] = %s", indOfMax, formattedPopulation);
+		PrintStream out = new PrintStream(System.out, true, DATA_FILE_CHARSET);
+		regionToCitiesCount.forEach((region, count) -> out.format("%s - %d%n", region, count));
 	}
 }
